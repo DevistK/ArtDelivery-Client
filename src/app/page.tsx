@@ -12,7 +12,11 @@ import {
 export default function Home() {
   const [imageSrc, setImageSrc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedOptions, setSelectedOptions] = useState<DynamicObject>({});
+  const [selectedOptions, setSelectedOptions] = useState<DynamicObject>({
+    size: "256x256",
+    quality: "standard",
+    style: "natural",
+  });
   const [prompt, setPrompt] = useState<string>("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
