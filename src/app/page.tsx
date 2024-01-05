@@ -9,6 +9,8 @@ import {
   Size,
   Style,
 } from "@/constant/constant";
+import { generateArtwork } from "@/api/post";
+
 export default function Home() {
   const [imageSrc, setImageSrc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,17 +31,23 @@ export default function Home() {
     }));
   };
 
-  const handleGenerateImage = () => {
+  const handleGenerateImage = async () => {
     try {
       setLoading(true);
-      const dummyImageUrl = "https://via.placeholder.com/150";
-      setImageSrc(dummyImageUrl);
 
-      console.log(selectedOptions);
-      console.log(prompt);
+      const request = {
+        size: selectedOptions["size"],
+        quality: selectedOptions["quality"],
+        style: selectedOptions["style"],
+        prompt: prompt,
+      };
+
+      const response = await generateArtwork(request);
+      console.log(response.data);
+      // setImageSrc(dummyImageUrl);
     } catch (error) {
       console.error("Error generating image:", error);
-      setLoading(false); // 에러 발생 시에도 로딩 상태를 해제합니다.
+      setLoading(false);
     }
   };
 
