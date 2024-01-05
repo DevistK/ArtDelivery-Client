@@ -5,10 +5,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "via.placeholder.com",
-        port: "",
-        pathname: "/150",
+        hostname: "oaidalleapiprodscus.blob.core.windows.net",
       },
     ],
   },

@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import emptyImage from "./images/emptyImage.jpg";
-import Image from "next/image";
 import {
   DynamicObject,
   Quality,
@@ -10,6 +9,7 @@ import {
   Style,
 } from "@/constant/constant";
 import { generateArtwork } from "@/api/post";
+import DownloadButton from "@/components/button/downloadButton";
 
 export default function Home() {
   const [imageSrc, setImageSrc] = useState<string>("");
@@ -43,8 +43,8 @@ export default function Home() {
       };
 
       const response = await generateArtwork(request);
-      console.log(response.data);
-      // setImageSrc(dummyImageUrl);
+
+      setImageSrc(response.data);
     } catch (error) {
       console.error("Error generating image:", error);
       setLoading(false);
@@ -60,18 +60,16 @@ export default function Home() {
       </div>
       <div className="container w-screen border-accent-content/0 items-center flex justify-center relative">
         {imageSrc ? (
-          <Image
+          <img
             src={imageSrc}
-            alt="Generated Image"
-            width={512}
-            height={512}
+            alt={"Generated Image"}
+            className="w-[1024px] h-[512px] object-contain"
           />
         ) : (
-          <Image
-            src={emptyImage}
-            alt="Generated Image"
-            width={512}
-            height={512}
+          <img
+            src={emptyImage.src}
+            alt={"Generated Image"}
+            className="w-[1024px] h-[512px] object-contain"
           />
         )}
       </div>
@@ -156,6 +154,12 @@ export default function Home() {
           <span className="loading loading-spinner text-secondary"></span>
         ) : null}
       </button>
+      {imageSrc ? (
+        <DownloadButton
+          imageUrl={imageSrc}
+          fileName={"download_image_dalle.png"}
+        />
+      ) : null}
     </div>
   );
 }
