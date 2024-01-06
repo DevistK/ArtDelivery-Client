@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import emptyImage from "./images/emptyImage.jpg";
 import {
   DynamicObject,
@@ -21,7 +21,7 @@ export default function Home() {
   });
   const [prompt, setPrompt] = useState<string>("");
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(event.target.value);
   };
   const handleSelectChange = (key: string, value: string) => {
@@ -43,8 +43,14 @@ export default function Home() {
       };
 
       const response = await generateArtwork(request);
+      const base64Data = response.data;
+      const decodedData = Buffer.from(base64Data, "base64");
 
-      setImageSrc(response.data);
+      console.log(base64Data);
+      const blob = new Blob([decodedData]);
+      const img = URL.createObjectURL(blob);
+
+      setImageSrc(img);
     } catch (error) {
       console.error("Error generating image:", error);
       setLoading(false);
@@ -59,18 +65,25 @@ export default function Home() {
         </h1>
       </div>
       <div className="container w-screen border-accent-content/0 items-center flex justify-center relative">
-        {imageSrc ? (
+        {imageSrc && (
           <img
             src={imageSrc}
             alt={"Generated Image"}
             className="w-[1024px] h-[512px] object-contain"
           />
-        ) : (
+        )}
+        {!imageSrc && (
           <img
             src={emptyImage.src}
             alt={"Generated Image"}
             className="w-[1024px] h-[512px] object-contain"
+            style={{
+              display: loading ? "none" : "block",
+            }}
           />
+        )}
+        {!imageSrc && loading && (
+          <div className="skeleton w-[512px] h-[512px]"></div>
         )}
       </div>
       <div className="mockup-code my-10">
@@ -137,13 +150,12 @@ export default function Home() {
           </select>
         </label>
       </div>
-      <input
-        type="text"
+      <textarea
+        className="textarea textarea-secondary w-[500px] h-[300px]"
         placeholder="Type in Your idea or keyword"
-        className="input input-bordered input-secondary w-full max-w-xs"
         value={prompt}
         onChange={handleInputChange}
-      />
+      ></textarea>
       <button
         className="btn btn-secondary mt-7"
         onClick={handleGenerateImage}
