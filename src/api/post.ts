@@ -13,11 +13,12 @@ export async function generateArtwork(
         quality: data.quality,
         style: data.style,
         prompt: data.prompt,
+        code: data.code,
       },
     );
 
     return response.data;
   } catch (e: any) {
-    throw new Error(e.message);
+    throw e;
   }
 }

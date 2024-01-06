@@ -10,8 +10,11 @@ import {
 } from "@/constant/constant";
 import { generateArtwork } from "@/api/post";
 import DownloadButton from "@/components/button/downloadButton";
+import Overlay from "@/components/overlay/overlay";
 
 export default function Home() {
+  const [invalidCode, setInvalidCode] = useState(false);
+  const [isOverlayVisible, setOverlayVisible] = useState(true);
   const [imageSrc, setImageSrc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<DynamicObject>({
@@ -20,10 +23,23 @@ export default function Home() {
     style: "natural",
   });
   const [prompt, setPrompt] = useState<string>("");
+  const [code, setCode] = useState<string>("");
+
+  const handleErrorToast = () => {
+    setInvalidCode(false);
+  };
+  const handleOverlayClick = () => {
+    setOverlayVisible(false);
+  };
 
   const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(event.target.value);
   };
+
+  const handleCodeInputChange = (state: string) => {
+    setCode(state);
+  };
+
   const handleSelectChange = (key: string, value: string) => {
     setSelectedOptions((prevSelectedOptions) => ({
       ...prevSelectedOptions,
@@ -40,18 +56,21 @@ export default function Home() {
         quality: selectedOptions["quality"],
         style: selectedOptions["style"],
         prompt: prompt,
+        code: code,
       };
 
       const response = await generateArtwork(request);
       const base64Data = response.data;
       const decodedData = Buffer.from(base64Data, "base64");
 
-      console.log(base64Data);
       const blob = new Blob([decodedData]);
       const img = URL.createObjectURL(blob);
 
       setImageSrc(img);
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.status === 403) {
+        setInvalidCode(true);
+      }
       console.error("Error generating image:", error);
       setLoading(false);
     }
@@ -59,6 +78,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-10">
+      {isOverlayVisible && (
+        <Overlay
+          onClick={handleOverlayClick}
+          onCodeInputChange={handleCodeInputChange}
+        />
+      )}
       <div className="py-6">
         <h1 className="font-mono text-3xl antialiased font-bold">
           Create Your Art
@@ -172,6 +197,30 @@ export default function Home() {
           fileName={"download_image_dalle.png"}
         />
       ) : null}
+
+      <div
+        role="alert"
+        className="alert alert-error fixed top-0"
+        style={{
+          display: invalidCode ? "block" : "none",
+        }}
+        onClick={handleErrorToast}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="stroke-current shrink-0 h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span>올바르지 않은 초대코드입니다.</span>
+      </div>
     </div>
   );
 }

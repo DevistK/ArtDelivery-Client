@@ -3,4 +3,6 @@ export interface ArtInterface {
   quality: string;
   style: string;
   prompt: string;
+
+  code: string;
 }
