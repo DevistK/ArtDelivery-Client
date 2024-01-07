@@ -3,8 +3,6 @@ export type DynamicObject = {
 };
 
 export enum Size {
-  sm = "256x256",
-  md = "512x512",
   lg = "1024x1024",
   xlw = "1792x1024",
   xlh = "1024x1792",
@@ -25,3 +23,23 @@ export enum SelectOption {
   style = "style",
   quality = "quality",
 }
+
+export const SizeOptions = [
+  { value: Size.lg, label: "1024x1024" },
+  { value: Size.xlw, label: "1792x1024" },
+  { value: Size.xlh, label: "1024x1792" },
+];
+
+export const QualityOptions = [
+  { value: Quality.standard, label: "standard" },
+  { value: Quality.hd, label: "hd" },
+];
+
+export const StyleOptions = [
+  { value: Style.vivid, label: "vivid" },
+  { value: Style.natural, label: "natural" },
+];
+
+export const StyleList = ["vivid", "natural"];
+
+export const QualityList = ["standard", "hd"];
