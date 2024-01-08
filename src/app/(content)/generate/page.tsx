@@ -1,6 +1,6 @@
 "use client";
 import React, { ChangeEvent, useState } from "react";
-import emptyImage from "./images/emptyImage.jpg";
+import emptyImage from "../../images/emptyImage.jpg";
 import {
   DynamicObject,
   Quality,
