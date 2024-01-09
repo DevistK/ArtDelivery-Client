@@ -10,11 +10,9 @@ import {
 } from "@/constant/constant";
 import { generateArtwork } from "@/api/post";
 import DownloadButton from "@/components/button/downloadButton";
-import Overlay from "@/components/overlay/overlay";
 
 export default function Home() {
   const [invalidCode, setInvalidCode] = useState(false);
-  const [isOverlayVisible, setOverlayVisible] = useState(true);
   const [imageSrc, setImageSrc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<DynamicObject>({
@@ -23,23 +21,13 @@ export default function Home() {
     style: "natural",
   });
   const [prompt, setPrompt] = useState<string>("");
-  const [code, setCode] = useState<string>("");
 
   const handleErrorToast = () => {
     setInvalidCode(false);
   };
-  const handleOverlayClick = () => {
-    if (code) {
-      setOverlayVisible(false);
-    }
-  };
 
   const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(event.target.value);
-  };
-
-  const handleCodeInputChange = (state: string) => {
-    setCode(state);
   };
 
   const handleSelectChange = (key: string, value: string) => {
@@ -58,7 +46,6 @@ export default function Home() {
         quality: selectedOptions["quality"],
         style: selectedOptions["style"],
         prompt: prompt,
-        code: code,
       };
 
       const response = await generateArtwork(request);
@@ -82,12 +69,6 @@ export default function Home() {
   return (
     <div className="flex h-screen">
       <div className="min-h-screen flex flex-col justify-center items-center">
-        {isOverlayVisible && (
-          <Overlay
-            onClick={handleOverlayClick}
-            onCodeInputChange={handleCodeInputChange}
-          />
-        )}
         <div className="py-6">
           <h1 className="font-mono text-3xl antialiased font-bold">
             Create Your Art

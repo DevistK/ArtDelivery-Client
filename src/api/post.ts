@@ -13,7 +13,6 @@ export async function generateArtwork(
         quality: data.quality,
         style: data.style,
         prompt: data.prompt,
-        code: data.code,
       },
     );
 
