@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import emptyImage from "../../images/emptyImage.jpg";
 import {
   DynamicObject,
@@ -10,6 +10,8 @@ import {
 } from "@/constant/constant";
 import { generateArtwork } from "@/api/post";
 import DownloadButton from "@/components/button/downloadButton";
+import useToken from "@/hook/useToken";
+import { redirect } from "next/navigation";
 
 export default function Home() {
   const [invalidCode, setInvalidCode] = useState(false);
@@ -65,6 +67,8 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {}, []);
 
   return (
     <div className="flex h-screen">
