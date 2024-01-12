@@ -1,17 +1,30 @@
+"use client";
 import {
   createContext,
   PropsWithChildren,
-  ReactNode,
   useContext,
   useEffect,
   useState,
 } from "react";
+import { redirect } from "next/navigation";
 
-const AuthContext = createContext<string | undefined>(undefined);
+type userInfo = {
+  email: string;
+  name: string;
+  iat: number;
+  exp: number;
+};
+
+type AuthContextProps = {
+  token: string | null;
+  login: (newToken: string) => void;
+  logout: () => void;
+};
+
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [mount, isMount] = useState(false);
-  const [token, setToken] = useState<string>("");
+  const [token, setToken] = useState<string | null>("");
 
   useEffect(() => {
     const storedToken = document.cookie.replace(
@@ -19,17 +32,37 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       "$1",
     );
     setToken(storedToken);
-    isMount(true);
+    localStorage.setItem("access_token", storedToken);
   }, []);
 
-  useEffect(() => {
-    if (mount) {
-      console.log(token);
-    }
-  }, [mount]);
+  const login = (newToken: string) => {
+    setToken(newToken);
+    localStorage.setItem("access_token", newToken);
+    redirect("/generate");
+  };
 
-  return <AuthContext.Provider value={token}>{children}</AuthContext.Provider>;
+  const logout = () => {
+    setToken(null);
+    localStorage.removeItem("access_token");
+    redirect("/signin");
+  };
+
+  const contextValue: AuthContextProps = {
+    token,
+    login,
+    logout,
+  };
+
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 };
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
-export const useAuthContext = useContext(AuthContext);
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuthContext must be used within an AuthProvider");
+  }
+  return context;
+};

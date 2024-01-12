@@ -1,15 +1,36 @@
-import { Inter } from "next/font/google";
+import "../styles/globals.css";
+import { Inter, Noto_Sans_KR, Roboto } from "next/font/google";
+import { AuthProvider } from "@/context/tokenContext";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const notoSansKr = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["100", "400", "700", "900"],
+});
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["100", "400", "700"],
+  variable: "--roboto",
+});
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cls = (...classnames: string[]) => {
+    return classnames.join(" ");
+  };
+
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <AuthProvider>
+      <html lang="en">
+        <body className={cls(notoSansKr.className, roboto.variable)}>
+          {children}
+        </body>
+      </html>
+    </AuthProvider>
   );
 }

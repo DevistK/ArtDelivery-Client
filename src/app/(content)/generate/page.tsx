@@ -10,10 +10,11 @@ import {
 } from "@/constant/constant";
 import { generateArtwork } from "@/api/post";
 import DownloadButton from "@/components/button/downloadButton";
-import useToken from "@/hook/useToken";
 import { redirect } from "next/navigation";
+import { useAuthContext } from "@/context/tokenContext";
 
 export default function Home() {
+  const { token, logout } = useAuthContext();
   const [invalidCode, setInvalidCode] = useState(false);
   const [imageSrc, setImageSrc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -68,13 +69,18 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!token) {
+      logout();
+      redirect("signin");
+    }
+  }, [token]);
 
   return (
     <div className="flex h-screen">
       <div className="min-h-screen flex flex-col justify-center items-center">
         <div className="py-6">
-          <h1 className="font-mono text-3xl antialiased font-bold">
+          <h1 className="font-mono text-3xl antialiased font-bold font-roboto">
             Create Your Art
           </h1>
         </div>
@@ -117,7 +123,7 @@ export default function Home() {
             onChange={handleInputChange}
           ></textarea>
           <button
-            className="btn btn-secondary w-[150px] h-full rounded-none"
+            className="btn btn-secondary w-[150px] h-full rounded-none font-roboto"
             onClick={handleGenerateImage}
             disabled={loading}
           >
@@ -155,18 +161,20 @@ export default function Home() {
               d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>올바르지 않은 초대코드입니다.</span>
+          <span className="font-roboto">올바르지 않은 초대코드입니다.</span>
         </div>
       </div>
       <div className="bg-base-300 w-[20%] h-screen z-10 py-6">
         <div className="container flex flex-col justify-center items-center mb-8 ">
           <label>
             <div className="label">
-              <span className="label-text text-lg font-bold">해상도</span>
+              <span className="label-text text-lg font-bold font-roboto">
+                해상도
+              </span>
             </div>
             <select
               id="select1"
-              className="select select-secondary w-48 mr-4"
+              className="select select-secondary w-48 mr-4 font-roboto"
               value={selectedOptions[SelectOption.size] || ""}
               onChange={(e) =>
                 handleSelectChange(SelectOption.size, e.target.value)
@@ -179,11 +187,13 @@ export default function Home() {
           </label>
           <label>
             <div className="label">
-              <span className="label-text text-lg font-bold">퀄리티</span>
+              <span className="label-text text-lg font-bold font-roboto">
+                퀄리티
+              </span>
             </div>
             <select
               id="select2"
-              className="select select-secondary w-48 mr-4"
+              className="select select-secondary w-48 mr-4 font-roboto"
               value={selectedOptions[SelectOption.quality] || ""}
               onChange={(e) =>
                 handleSelectChange(SelectOption.quality, e.target.value)
@@ -195,11 +205,13 @@ export default function Home() {
           </label>
           <label>
             <div className="label">
-              <span className="label-text text-lg font-bold">스타일</span>
+              <span className="label-text text-lg font-bold font-roboto">
+                스타일
+              </span>
             </div>
             <select
               id="select3"
-              className="select select-secondary w-48 mr-4"
+              className="select select-secondary w-48 mr-4 font-roboto"
               value={selectedOptions[SelectOption.style] || ""}
               onChange={(e) =>
                 handleSelectChange(SelectOption.style, e.target.value)
