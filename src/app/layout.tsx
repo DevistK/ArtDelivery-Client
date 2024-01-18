@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter, Noto_Sans_KR, Roboto } from "next/font/google";
 import { AuthProvider } from "@/context/tokenContext";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
         <body className={cls(notoSansKr.className, roboto.variable)}>
           {children}
           <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </AuthProvider>
