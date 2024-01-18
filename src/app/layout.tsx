@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import { Analytics } from "@vercel/analytics/react";
 import { Inter, Noto_Sans_KR, Roboto } from "next/font/google";
 import { AuthProvider } from "@/context/tokenContext";
 
@@ -29,6 +30,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={cls(notoSansKr.className, roboto.variable)}>
           {children}
+          <Analytics />
         </body>
       </html>
     </AuthProvider>

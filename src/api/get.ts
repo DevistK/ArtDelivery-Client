@@ -2,19 +2,12 @@ import axios from "axios";
 import { ArtInterface } from "@/interface/post.interface";
 import { ResponseInterface } from "@/interface/response.interface";
 
-export async function generateArtwork(
-  data: ArtInterface,
+export async function getUserInfo(
+  token: string | null,
 ): Promise<ResponseInterface> {
-  const token = localStorage.getItem("access_token");
   try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/art`,
-      {
-        size: data.size,
-        quality: data.quality,
-        style: data.style,
-        prompt: data.prompt,
-      },
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/info`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

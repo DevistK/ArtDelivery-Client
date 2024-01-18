@@ -15,7 +15,6 @@ interface props {
 
 const DownloadButton = ({ imageUrl, fileName }: props) => {
   const handleDownload = async () => {
-    console.log(imageUrl);
     const response = await fetch(imageUrl);
     const blob = await response.blob();
     saveAs(blob, fileName);

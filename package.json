@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env env-cmd -f env.dev next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "cross-env env-cmd -f env.prod next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -14,6 +14,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/cookie": "^0.6.0",
+    "@vercel/analytics": "^1.1.1",
     "axios": "^1.6.4",
     "cookie": "^0.6.0",
     "cross-env": "^7.0.3",
